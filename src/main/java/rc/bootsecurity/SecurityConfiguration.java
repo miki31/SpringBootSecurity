@@ -37,8 +37,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .anyRequest().authenticated()     // access to all functions without permission
                 .antMatchers("/index.html").permitAll()
                 .antMatchers("/profile/**").authenticated()  // "/profile/index" --> can connect to that file;   "/profile/**" --> can connect to all files in folder "profile"
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/management/**").hasAnyRole("ADMIN", "MANAGER")
+                .antMatchers("/admin/**").hasRole("ADMIN")   // .authenticated() --> permission for all authenticated users
+                .antMatchers("/management/**").hasAnyRole("ADMIN", "MANAGER")  // .hasRole("ADMIN") --> permission for user who is authenticated and has a role "ADMIN"
+
+                // add secure to REST API controller
+                .antMatchers("/api/public/**").hasRole("ADMIN") // "/api/public/**" --> for all inner url
+
                 .and()
                 .httpBasic();
     }
