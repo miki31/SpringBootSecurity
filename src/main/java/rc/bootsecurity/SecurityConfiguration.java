@@ -20,6 +20,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                     .password(passwordEncoder().encode("admin123"))
                     .roles("ADMIN")
+                    .authorities("ACCESS_TEST1", "ACCESS_TEST2")
                 .and()
                 .withUser("misha")
                     .password(passwordEncoder().encode("misha123"))
@@ -27,7 +28,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("manager")
                     .password(passwordEncoder().encode("manager123"))
-                    .roles("MANAGER");
+                    .roles("MANAGER")
+                    .authorities("ACCESS_TEST1");
     }
 
     @Override
@@ -41,7 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/management/**").hasAnyRole("ADMIN", "MANAGER")  // .hasRole("ADMIN") --> permission for user who is authenticated and has a role "ADMIN"
 
                 // add secure to REST API controller
-                .antMatchers("/api/public/**").hasRole("ADMIN") // "/api/public/**" --> for all inner url
+//                .antMatchers("/api/public/**").hasRole("ADMIN") // "/api/public/**" --> for all inner url
+                .antMatchers("/api/public/test1").hasAuthority("ACCESS_TEST1")
+                .antMatchers("/api/public/test2").hasAuthority("ACCESS_TEST2")
 
                 .and()
                 .httpBasic();
